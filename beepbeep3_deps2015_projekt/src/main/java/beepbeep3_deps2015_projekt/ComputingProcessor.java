@@ -15,7 +15,10 @@ public class ComputingProcessor extends SingleProcessor {
 
 	@Override
 	protected boolean compute(Object[] input, Queue<Object[]> queue) throws ProcessorException {
-		// TODO Auto-generated method stub
+		System.out.println("nyehh");
+		for(int i = 0 ; i < input.length ; i++) {
+			System.out.println(input[i]);
+		}
 		return false;
 	}
 

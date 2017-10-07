@@ -21,12 +21,17 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/beepbeep-3.jar"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/beepbeep-3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/apache.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/fol.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/fsm.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/ltl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Boti/AppData/tuples.jar" sourcepath="C:/Users/Boti/Downloads/beepbeep3palettes/beepbeep-3-palettes-master"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
