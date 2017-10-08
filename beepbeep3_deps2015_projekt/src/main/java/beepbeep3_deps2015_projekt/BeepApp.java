@@ -1,10 +1,7 @@
 package beepbeep3_deps2015_projekt;
 
-
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
-
-
 
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Connector.ConnectorException;
@@ -26,17 +23,35 @@ public class BeepApp {
 
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
-		FileParserProcessor fproc = new FileParserProcessor(1, 1, initializeDataFileParser());
-		ComputingProcessor cproc = new ComputingProcessor(1, 1);
-		Connector.connect(fproc, cproc);
-
-		Pushable fprocPushable = fproc.getPushableInput(0);
+		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser());
+		NewRouteComputingProcessor nrProc = new NewRouteComputingProcessor(1, 1, freqRouteToplist);
+		OutrunningRoutesComputingProcessor orProc = new OutrunningRoutesComputingProcessor(2, 1, freqRouteToplist);
 		
-		Tick tick = new Tick(-1);
-		for(int i = 0; i < 100 ; i++) {
-			fprocPushable.push(tick);
+		
+		/*
+		 *       0  0        0  0
+		 * fProc ---> nrProc ---> orProc
+		 *      |1               1^
+		 *      |                 |
+		 *      ------------------
+		 */
+		Connector.connect(fProc, 0, nrProc,0);
+		Connector.connect(fProc, 1 , orProc, 1);
+		Connector.connect(nrProc, 0 , orProc, 0);
+		
+		
+
+		Pushable fprocPushable = fProc.getPushableInput(0);
+
+		long time = fProc.getCurrentParsedTime();
+		// going for 1 hour
+		for (long i = 0; i < 3600; i++) {
+			fprocPushable.push(new Tick(time++));
+			
 		}
 		
+		fProc.closeDataFileParser();
+
 	}
 
 	public static DataFileParser initializeDataFileParser() {
