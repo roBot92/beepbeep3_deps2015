@@ -24,6 +24,7 @@ public class BeepApp {
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
 		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser());
+		
 		NewRouteComputingProcessor nrProc = new NewRouteComputingProcessor(1, 1, freqRouteToplist);
 		OutrunningRoutesComputingProcessor orProc = new OutrunningRoutesComputingProcessor(2, 1, freqRouteToplist);
 		

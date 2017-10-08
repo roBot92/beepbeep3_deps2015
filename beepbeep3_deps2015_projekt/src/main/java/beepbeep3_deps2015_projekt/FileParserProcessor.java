@@ -87,5 +87,6 @@ public class FileParserProcessor extends SingleProcessor {
 		}
 		return lastParsedTaxiLogs.get(0).getDropoff_datetime().getTime();
 	}
+	
 
 }

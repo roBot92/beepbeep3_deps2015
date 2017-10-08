@@ -29,6 +29,7 @@ public class NewRouteComputingProcessor extends SingleProcessor {
 				TaxiLog tlog = (TaxiLog) o;
 				toplistSet.increaseRouteFrequency(tlog.getPickup_cell(), tlog.getPickup_cell(), tlog.getDropoff_datetime());
 			}
+			queue.add(input);
 		}
 		
 		return true;
