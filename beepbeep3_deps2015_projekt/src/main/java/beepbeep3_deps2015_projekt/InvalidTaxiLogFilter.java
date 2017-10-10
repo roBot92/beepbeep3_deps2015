@@ -29,6 +29,7 @@ public class InvalidTaxiLogFilter extends SingleProcessor {
 					iterator.remove();
 				}
 			}
+			output.add(new Object[] {tlogs});
 			return true;
 		}
 		

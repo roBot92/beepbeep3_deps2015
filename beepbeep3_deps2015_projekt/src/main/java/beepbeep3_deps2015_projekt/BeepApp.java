@@ -24,33 +24,30 @@ public class BeepApp {
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
 		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser());
-		
+		InvalidTaxiLogFilter filterProc = new InvalidTaxiLogFilter(1, 1);
 		NewRouteComputingProcessor nrProc = new NewRouteComputingProcessor(1, 1, freqRouteToplist);
 		OutrunningRoutesComputingProcessor orProc = new OutrunningRoutesComputingProcessor(2, 1, freqRouteToplist);
-		
-		
-		/*
-		 *       0  0        0  0
-		 * fProc ---> nrProc ---> orProc
-		 *      |1               1^
-		 *      |                 |
-		 *      ------------------
+
+		/*       0   0         0  0      0     0
+		 * fProc --->filterProc--->nrProc ---> orProc 
+		 * |1                                 ^1
+		 * |__________________________________|
 		 */
-		Connector.connect(fProc, 0, nrProc,0);
-		Connector.connect(fProc, 1 , orProc, 1);
-		Connector.connect(nrProc, 0 , orProc, 0);
-		
-		
+		Connector.connect(fProc, 0, filterProc, 0);
+		Connector.connect(filterProc, 0, nrProc, 0);
+		Connector.connect(nrProc, 0, orProc, 0);
+		Connector.connect(fProc, 1, orProc, 1);
 
 		Pushable fprocPushable = fProc.getPushableInput(0);
 
 		long time = fProc.getCurrentParsedTime();
 		// going for 1 hour
-		for (long i = 0; i < 3600; i++) {
-			fprocPushable.push(new Tick(time++));
-			
+		long oneDayInMinutes = 24 * 60 * 60;
+		for (long i = 0; i < oneDayInMinutes; i++) {
+			fprocPushable.push(new Tick(time + i * 1000));
+
 		}
-		
+
 		fProc.closeDataFileParser();
 
 	}
