@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt;
+package beepbeep3_deps2015_projekt.processors;
 
 import java.util.Collections;
 import java.util.List;
@@ -85,7 +85,7 @@ public class FileParserProcessor extends SingleProcessor {
 		if (lastParsedTaxiLogs.isEmpty()) {
 			return -1;
 		}
-		return lastParsedTaxiLogs.get(0).getDropoff_datetime().getTime();
+		return DataFileParser.getCURRENT_TIME();
 	}
 	
 

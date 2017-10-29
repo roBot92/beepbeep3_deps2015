@@ -1,19 +1,22 @@
-package beepbeep3_deps2015_projekt;
+package beepbeep3_deps2015_projekt.processors;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.Predicate;
 
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
+import ca.uqac.lif.cep.tmf.Filter;
 import onlab.event.TaxiLog;
 
 public class InvalidTaxiLogFilter extends SingleProcessor {
 
-	
-	public InvalidTaxiLogFilter(int in_arity, int out_arity) {
+	private Predicate<TaxiLog> filter;
+	public InvalidTaxiLogFilter(int in_arity, int out_arity, Predicate<TaxiLog> filter) {
 		super(in_arity, out_arity);
+		this.filter = filter;
 	}
 
 	@Override
@@ -25,7 +28,7 @@ public class InvalidTaxiLogFilter extends SingleProcessor {
 			
 			while(iterator.hasNext()) {
 				TaxiLog tlog = iterator.next();
-				if(tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null || tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null) {
+				if(filter.test(tlog)) {
 					iterator.remove();
 				}
 			}
