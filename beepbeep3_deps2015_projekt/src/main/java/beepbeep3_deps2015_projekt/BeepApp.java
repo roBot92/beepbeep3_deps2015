@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 
 import beepbeep3_deps2015_projekt.processors.FileParserProcessor;
+import beepbeep3_deps2015_projekt.processors.FilePrinterProcessor;
 import beepbeep3_deps2015_projekt.processors.InvalidTaxiLogFilter;
 import beepbeep3_deps2015_projekt.processors.task1.NewRouteComputingProcessor;
 import beepbeep3_deps2015_projekt.processors.task2.MedianComputingProcessor;
@@ -27,10 +28,15 @@ public class BeepApp {
 	public static String FILENAME = "testcsv.csv";
 	private static FrequentRoutesToplistSet freqRouteToplist = new FrequentRoutesToplistSet();
 	private static ProfitableAreaToplistSet profAreaToplist = new ProfitableAreaToplistSet();
+	private static String RESULT_FILE_PATH = "C:\\Users\\Boti\\git\\beepbeep3\\beepbeep3_deps2015_projekt\\src\\main\\resources\\result.txt";
+	private static long printFrequencyInMillisec = 1000;
+
+	private static long TEST_INTERVAL_IN_IN_MS = 1 * 60 * 60 * 1000;
 
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
-		runTask1();
+		//runTask1();
+		runTask2();
 
 	}
 
@@ -79,15 +85,35 @@ public class BeepApp {
 
 	}
 
-	public static void runTask2() {
+	public static void runTask2() throws ConnectorException {
 		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser());
 		InvalidTaxiLogFilter filterProc = new InvalidTaxiLogFilter(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
-					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null
-					|| tlog.getFare_amount() == null || tlog.getTip_amount() == null;
+					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null || tlog.getFare_amount() == null
+					|| tlog.getTip_amount() == null;
 		});
-		
+
 		MedianComputingProcessor medProc = new MedianComputingProcessor(2, 2, profAreaToplist);
 		TaxiCountComputingProcessor countProc = new TaxiCountComputingProcessor(2, 1, profAreaToplist);
+		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, RESULT_FILE_PATH, profAreaToplist,
+				printFrequencyInMillisec);
+
+		Connector.connect(fProc, 0, filterProc, 0);
+		Connector.connect(filterProc, 0, medProc, 0);
+		Connector.connect(fProc, 1, medProc, 1);
+		Connector.connect(medProc, 0, countProc, 0);
+		Connector.connect(medProc, 1, countProc, 1);
+		Connector.connect(countProc, 0, fPrintProc, 0);
+
+		Pushable fprocPushable = fProc.getPushableInput(0);
+
+		long startingTime = fProc.getCurrentParsedTime();
+
+		for (long i = startingTime; i < TEST_INTERVAL_IN_IN_MS  + startingTime; i += 1000) {
+			fprocPushable.push(new Tick(i));
+		}
+
+		fProc.closeDataFileParser();
+
 	}
 }

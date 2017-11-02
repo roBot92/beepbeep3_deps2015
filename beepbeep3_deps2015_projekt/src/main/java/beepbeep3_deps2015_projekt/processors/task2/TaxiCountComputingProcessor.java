@@ -47,8 +47,12 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 	protected boolean compute(Object[] input, Queue<Object[]> output) throws ProcessorException {
 		if (input[0] instanceof List<?> && input[1] instanceof Tick) {
 
-			handleExpiringTaxiLogs((Tick) input[1]);
-			handleIncomingTaxiLogs((List<TaxiLog>) input[0]);
+			List<TaxiLog> tlogs = (List<TaxiLog>) input[0];
+			Tick tick = (Tick) input[1];
+			handleExpiringTaxiLogs(tick);
+			handleIncomingTaxiLogs(tlogs);
+			
+			output.add(new Object[] {tlogs, tick});
 
 			return true;
 		}

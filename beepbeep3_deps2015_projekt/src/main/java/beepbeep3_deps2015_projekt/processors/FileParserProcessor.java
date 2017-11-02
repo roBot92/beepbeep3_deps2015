@@ -14,6 +14,8 @@ import onlab.utility.DataFileParser;
 public class FileParserProcessor extends SingleProcessor {
 
 	private DataFileParser parser;
+	
+	
 
 	private List<TaxiLog> lastParsedTaxiLogs;
 

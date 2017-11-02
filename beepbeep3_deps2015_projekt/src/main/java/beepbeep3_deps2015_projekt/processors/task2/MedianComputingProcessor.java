@@ -48,9 +48,14 @@ public class MedianComputingProcessor extends SingleProcessor {
 	@Override
 	protected boolean compute(Object[] input, Queue<Object[]> output) throws ProcessorException {
 		if (input[0] instanceof List<?> && input[1] instanceof Tick) {
-
+			Tick tick = (Tick)input[1];
+			List<TaxiLog> tlogs = (List<TaxiLog>) input[0];
+			
 			addNewValuesToMedians((List<TaxiLog>) input[0]);
-			removeOldMedianValueElements((Tick) input[1]);
+			removeOldMedianValueElements((Tick) input[1]);			
+			output.add(new Object[] {tlogs, tick});
+			
+			
 			return true;
 		}
 
@@ -76,7 +81,7 @@ public class MedianComputingProcessor extends SingleProcessor {
 	private void removeOldMedianValueElements(Tick tick) {
 		long currentTime = tick.getCurrentTime();
 
-		// Decreasing frequencies of routes based on old entries
+		
 		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime < currentTime - lengthOfTimeWindow) {
 			MedianElementEntry entry = cellPairs.poll();
 			CustomTreeMultiset medianListOfTlog = medianMap.get(entry.cell);
