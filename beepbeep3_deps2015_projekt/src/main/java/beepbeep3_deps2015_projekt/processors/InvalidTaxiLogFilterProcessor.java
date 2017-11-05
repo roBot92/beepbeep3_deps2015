@@ -8,13 +8,13 @@ import java.util.function.Predicate;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
-import ca.uqac.lif.cep.tmf.Filter;
 import onlab.event.TaxiLog;
+import onlab.positioning.Cell;
 
-public class InvalidTaxiLogFilter extends SingleProcessor {
+public class InvalidTaxiLogFilterProcessor extends SingleProcessor {
 
 	private Predicate<TaxiLog> filter;
-	public InvalidTaxiLogFilter(int in_arity, int out_arity, Predicate<TaxiLog> filter) {
+	public InvalidTaxiLogFilterProcessor(int in_arity, int out_arity, Predicate<TaxiLog> filter) {
 		super(in_arity, out_arity);
 		this.filter = filter;
 	}

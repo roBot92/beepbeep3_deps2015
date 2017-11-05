@@ -82,7 +82,7 @@ public class MedianComputingProcessor extends SingleProcessor {
 		long currentTime = tick.getCurrentTime();
 
 		
-		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime < currentTime - lengthOfTimeWindow) {
+		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime <= currentTime - lengthOfTimeWindow) {
 			MedianElementEntry entry = cellPairs.poll();
 			CustomTreeMultiset medianListOfTlog = medianMap.get(entry.cell);
 			if (medianListOfTlog != null) {

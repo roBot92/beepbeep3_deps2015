@@ -52,7 +52,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			handleExpiringTaxiLogs(tick);
 			handleIncomingTaxiLogs(tlogs);
 			
-			output.add(new Object[] {tlogs, tick});
+			output.add(new Object[] {tick});
 
 			return true;
 		}
@@ -73,6 +73,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			if (previousEntryOfTaxi != null) {
 				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, dropoffTime);
 			}
+			toplist.increaseAreaTaxiCount(tlog.getDropoff_cell(), tlog.getDropoff_datetime());
 			TaxiMovedEntry newEntryOfTaxi = new TaxiMovedEntry(taxiLicense, cell, dropoffTime.getTime());
 			actualTaxiLocations.put(taxiLicense, newEntryOfTaxi);
 			taxiMovements.add(newEntryOfTaxi);
@@ -82,7 +83,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 
 	private void handleExpiringTaxiLogs(Tick tick) {
 		long currentTime = tick.getCurrentTime();
-		while (taxiMovements.peek() != null && taxiMovements.peek().time < currentTime - lengthOfTimeWindow) {
+		while (taxiMovements.peek() != null && taxiMovements.peek().time <= currentTime - lengthOfTimeWindow) {
 			TaxiMovedEntry entry = taxiMovements.poll();
 			//Ha a taxi aktuális hely entryje megegyezik a kifutó entryvel, akkor kell csak csökkenteni (mert akkor nem tartozik hozzá újabb) és ebben az esetben törölni is lehet
 			//Az aktuális lokációját

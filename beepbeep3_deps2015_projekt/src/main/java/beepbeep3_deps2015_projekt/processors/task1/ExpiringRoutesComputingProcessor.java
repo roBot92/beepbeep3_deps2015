@@ -64,6 +64,7 @@ public class ExpiringRoutesComputingProcessor extends SingleProcessor {
 		}
 
 		System.out.println(toplist);
+		output.add(new Object[] {input[1]});
 		return true;
 	}
 
