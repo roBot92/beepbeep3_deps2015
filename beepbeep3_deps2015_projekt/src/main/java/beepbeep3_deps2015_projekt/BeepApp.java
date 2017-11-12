@@ -16,7 +16,6 @@ import ca.uqac.lif.cep.Pushable;
 import ca.uqac.lif.cep.interpreter.Interpreter.ParseException;
 import onlab.event.Tick;
 import onlab.main.DebsMain;
-import onlab.positioning.Cell;
 import onlab.positioning.CellHelper;
 import onlab.utility.DataFileParser;
 import onlab.utility.FrequentRoutesToplistSet;
@@ -94,7 +93,8 @@ public class BeepApp {
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
 					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null || tlog.getFare_amount() == null
-					|| tlog.getFare_amount().compareTo(BigDecimal.ZERO) < 1 || tlog.getTip_amount() == null;
+					|| tlog.getFare_amount().compareTo(BigDecimal.ZERO) < 1 || tlog.getTip_amount() == null
+					|| tlog.getHack_license() == null;
 		});
 
 		MedianComputingProcessor medProc = new MedianComputingProcessor(2, 2, profAreaToplist);
@@ -116,8 +116,6 @@ public class BeepApp {
 		for (long i = startingTime; i <= TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
 			fprocPushable.push(new Tick(i));
 		}
-		
-		System.out.println(profAreaToplist.getAreaByCell(new Cell(146,170)));
 
 		fProc.closeDataFileParser();
 

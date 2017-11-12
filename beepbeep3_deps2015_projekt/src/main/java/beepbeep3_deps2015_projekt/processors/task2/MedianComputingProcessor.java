@@ -87,7 +87,7 @@ public class MedianComputingProcessor extends SingleProcessor {
 			CustomTreeMultiset medianListOfTlog = medianMap.get(entry.cell);
 			if (medianListOfTlog != null) {
 				medianListOfTlog.remove(entry.profit);
-				toplist.refreshAreaMedian(entry.cell, new Date(tick.getCurrentTime()), medianListOfTlog.getMedian());
+				toplist.refreshAreaMedian(entry.cell, null, medianListOfTlog.getMedian());
 			}
 
 		}

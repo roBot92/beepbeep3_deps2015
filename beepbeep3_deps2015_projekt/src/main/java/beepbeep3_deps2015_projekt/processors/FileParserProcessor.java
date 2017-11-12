@@ -56,7 +56,6 @@ public class FileParserProcessor extends SingleProcessor {
 				}
 				queue.add(new Object[] { lastParsedTaxiLogs, inputTick });
 				lastParsedTaxiLogs = parser.parseNextLinesFromCSVGroupedByDropoffDate();
-				System.out.println();
 				return true;
 			}
 

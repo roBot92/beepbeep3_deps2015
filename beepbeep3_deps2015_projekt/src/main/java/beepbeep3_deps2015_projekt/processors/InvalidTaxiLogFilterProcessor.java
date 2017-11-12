@@ -1,5 +1,6 @@
 package beepbeep3_deps2015_projekt.processors;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
@@ -9,7 +10,6 @@ import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
 import onlab.event.TaxiLog;
-import onlab.positioning.Cell;
 
 public class InvalidTaxiLogFilterProcessor extends SingleProcessor {
 
@@ -18,12 +18,13 @@ public class InvalidTaxiLogFilterProcessor extends SingleProcessor {
 		super(in_arity, out_arity);
 		this.filter = filter;
 	}
+	
 
 	@Override
 	protected boolean compute(Object[] input, Queue<Object[]> output) throws ProcessorException {
 		if(input[0] instanceof List<?>) {
 			@SuppressWarnings("unchecked")
-			List<TaxiLog> tlogs = (List<TaxiLog>) input[0];
+			List<TaxiLog> tlogs = new ArrayList<TaxiLog>((List<TaxiLog>) input[0]);
 			Iterator<TaxiLog> iterator = tlogs.iterator();
 			
 			while(iterator.hasNext()) {

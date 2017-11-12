@@ -55,7 +55,7 @@ public class ExpiringRoutesComputingProcessor extends SingleProcessor {
 		long currentTime = ((Tick) input[1]).getCurrentTime();
 
 		// Decreasing frequencies of routes based on old entries
-		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime < currentTime - lengthOfTimeWindow) {
+		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime <= currentTime - lengthOfTimeWindow) {
 			CellPairEntry entry = cellPairs.poll();
 			if (toplist != null) {
 				toplist.decreaseRouteFrequency(entry.pickupCell, entry.dropoffCell);

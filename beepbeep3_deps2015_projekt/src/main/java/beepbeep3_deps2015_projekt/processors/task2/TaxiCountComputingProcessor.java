@@ -51,6 +51,8 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			Tick tick = (Tick) input[1];
 			handleExpiringTaxiLogs(tick);
 			handleIncomingTaxiLogs(tlogs);
+		
+			
 			
 			output.add(new Object[] {tick});
 
@@ -71,7 +73,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			Date dropoffTime = tlog.getDropoff_datetime();
 			TaxiMovedEntry previousEntryOfTaxi = actualTaxiLocations.get(taxiLicense);
 			if (previousEntryOfTaxi != null) {
-				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, dropoffTime);
+				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, null);
 			}
 			toplist.increaseAreaTaxiCount(tlog.getDropoff_cell(), tlog.getDropoff_datetime());
 			TaxiMovedEntry newEntryOfTaxi = new TaxiMovedEntry(taxiLicense, cell, dropoffTime.getTime());
