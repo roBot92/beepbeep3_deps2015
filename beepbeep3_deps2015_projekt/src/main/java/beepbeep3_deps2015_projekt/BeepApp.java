@@ -35,8 +35,8 @@ public class BeepApp {
 
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
-		// runTask1();
-		runTask2();
+		 runTask1();
+		//runTask2();
 
 	}
 
