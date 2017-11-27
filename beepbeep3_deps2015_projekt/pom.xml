@@ -15,7 +15,7 @@
 			<artifactId>drools_debs2015_projekt</artifactId>
 			<version>1</version>
 
-			<exclusions>
+		<!--  	<exclusions>
 				<exclusion>
 					<groupId>org.drools</groupId>
 					<artifactId>*</artifactId>
@@ -24,7 +24,7 @@
 					<groupId>org.kie</groupId>
 					<artifactId>*</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions> -->
 		</dependency>
 	</dependencies>
 

@@ -28,15 +28,15 @@ public class BeepApp {
 	public static String FILENAME = "testcsv.csv";
 	private static FrequentRoutesToplistSet freqRouteToplist = new FrequentRoutesToplistSet();
 	private static ProfitableAreaToplistSet profAreaToplist = new ProfitableAreaToplistSet();
-	private static String RESULT_FILE_PATH = "C:\\Users\\Boti\\git\\beepbeep3\\beepbeep3_deps2015_projekt\\src\\main\\resources\\result.txt";
+	private static String RESULT_FILE_PATH = "C:\\Users\\Boti\\git\\beepbeep3_deps2015\\beepbeep3_deps2015_projekt\\result.txt";
 	private static long printFrequencyInMillisec = 60 * 60 * 1000;
 
 	private static long TEST_INTERVAL_IN_IN_MS = 1 * 60 * 60 * 1000;
 
 	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
 
-		 runTask1();
-		//runTask2();
+		// runTask1();
+		runTask2();
 
 	}
 
