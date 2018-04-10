@@ -26,7 +26,7 @@ public class NewRouteComputingProcessor extends SingleProcessor {
 			List<TaxiLog> newTlogs = (List<TaxiLog>) input[0];
 			for(TaxiLog tlog : newTlogs) {
 				toplistSet.increaseRouteFrequency(tlog.getPickup_cell(), tlog.getDropoff_cell(),
-						tlog.getDropoff_datetime());
+						tlog.getDropoff_datetime(), tlog.getInserted());
 			}
 			queue.add(input);
 		}
@@ -36,6 +36,12 @@ public class NewRouteComputingProcessor extends SingleProcessor {
 
 	@Override
 	public Processor clone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Processor duplicate() {
 		// TODO Auto-generated method stub
 		return null;
 	}

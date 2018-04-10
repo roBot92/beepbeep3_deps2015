@@ -1,6 +1,10 @@
 package beepbeep3_deps2015_projekt;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import beepbeep3_deps2015_projekt.processors.FileParserProcessor;
@@ -13,7 +17,6 @@ import beepbeep3_deps2015_projekt.processors.task1.ExpiringRoutesComputingProces
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Connector.ConnectorException;
 import ca.uqac.lif.cep.Pushable;
-import ca.uqac.lif.cep.interpreter.Interpreter.ParseException;
 import onlab.event.Tick;
 import onlab.main.DebsMain;
 import onlab.positioning.CellHelper;
@@ -23,20 +26,24 @@ import onlab.utility.ProfitableAreaToplistSet;
 
 public class BeepApp {
 
-	// public static String FILENAME =
-	// "C:\\Users\\Boti\\workspace\\beepbeep3_deps2015_projekt\\src\\main\\resources\\testcsv.csv";
-	public static String FILENAME = "testcsv.csv";
 	private static FrequentRoutesToplistSet freqRouteToplist = new FrequentRoutesToplistSet();
 	private static ProfitableAreaToplistSet profAreaToplist = new ProfitableAreaToplistSet();
-	private static String RESULT_FILE_PATH = "C:\\Users\\Boti\\git\\beepbeep3_deps2015\\beepbeep3_deps2015_projekt\\result.txt";
-	private static long printFrequencyInMillisec = 60 * 60 * 1000;
 
-	private static long TEST_INTERVAL_IN_IN_MS = 1 * 60 * 60 * 1000;
+	public static final long TEST_INTERVAL_IN_IN_MS = 1 * 60 * 60 * 1000;
+	public static final long BENCHMARK_FREQUENCY_IN_MS = 1000 * 60;
 
-	public static void main(String[] args) throws ParseException, FileNotFoundException, ConnectorException {
+	public static final int TASK_NUMBER_ONE = 1;
+	public static final int TASK_NUMBER_TWO = 2;
 
-		// runTask1();
-		runTask2();
+	public static void main(String[] args) {
+
+		try {
+			runTask1();
+			runTask2();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 
 	}
 
@@ -51,18 +58,76 @@ public class BeepApp {
 
 	}
 
-	public static void runTask1() throws ConnectorException {
-		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y,
-				DebsMain.SHIFT_X.divide(BigDecimal.valueOf(2)), DebsMain.SHIFT_Y.divide(BigDecimal.valueOf(2)), 600);
-		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
+	public static void runTask(String resultFileName, int runningMode, int taskNumber)
+			throws ConnectorException, IOException {
+
+		BufferedWriter resultFileWriter = null;
+		try {
+			resultFileWriter = initializeResultFileWriter(resultFileName);
+			Pushable pushable = null;
+			if (taskNumber == TASK_NUMBER_ONE) {
+				pushable = initializeTask1(runningMode, resultFileWriter);
+			} else if (taskNumber == TASK_NUMBER_TWO) {
+				pushable = initializeTask2(runningMode, resultFileWriter);
+			}
+			FileParserProcessor fPProc = (FileParserProcessor) pushable.getProcessor();
+			long startingTime = fPProc.getCurrentParsedTime();
+
+			for (long i = startingTime; i <= TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
+				pushable.push(new Tick(i));
+			}
+			fPProc.closeDataFileParser();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		} finally {
+			if (resultFileWriter != null) {
+				resultFileWriter.close();
+			}
+		}
+
+	}
+
+	public static void runTask1() throws ConnectorException, IOException {
+
+		runTask(DebsMain.task1ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_ONE);
+		freqRouteToplist.clear();
+		runTask(DebsMain.task1TimeMeasuringResultFileName,DebsMain.TIME_MEASURING_MODE, TASK_NUMBER_ONE);
+		freqRouteToplist.clear();
+		runTask(DebsMain.task1MemoryMeasuringResultFileName,DebsMain.MEMORY_MEASURING_MODE, TASK_NUMBER_ONE);
+	
+	}
+	
+	public static void runTask2() throws ConnectorException, IOException {
+
+		
+		runTask(DebsMain.task2ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
+		profAreaToplist.clear();
+		runTask(DebsMain.task2TimeMeasuringResultFileName,DebsMain.TIME_MEASURING_MODE, TASK_NUMBER_TWO);
+		profAreaToplist.clear();
+		runTask(DebsMain.task2MemoryMeasuringResultFileName,DebsMain.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
+	
+	}
+	
+	
+
+
+
+
+	public static Pushable initializeTask1(int runningMode, BufferedWriter resultFileWriter) {
+		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y, DebsMain.SHIFT_X,
+				DebsMain.SHIFT_Y, 300);
+
+		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper),freqRouteToplist);
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
 					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null;
 		});
 		NewRouteComputingProcessor nrProc = new NewRouteComputingProcessor(1, 1, freqRouteToplist);
 		ExpiringRoutesComputingProcessor exProc = new ExpiringRoutesComputingProcessor(2, 1, freqRouteToplist);
-		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, RESULT_FILE_PATH, freqRouteToplist,
-				printFrequencyInMillisec);
+		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, freqRouteToplist, runningMode,
+				resultFileWriter, BENCHMARK_FREQUENCY_IN_MS, fProc);
 
 		/*
 		 * 0 0 0 0 0 0 fProc --->filterProc--->nrProc ---> orProc |1 ^1
@@ -74,22 +139,13 @@ public class BeepApp {
 		Connector.connect(fProc, 1, exProc, 1);
 		Connector.connect(exProc, 0, fPrintProc, 0);
 
-		Pushable fprocPushable = fProc.getPushableInput(0);
-
-		long startingTime = fProc.getCurrentParsedTime();
-
-		for (long i = startingTime; i < TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
-			fprocPushable.push(new Tick(i));
-		}
-
-		fProc.closeDataFileParser();
-
+		return fProc.getPushableInput(0);
 	}
 
-	public static void runTask2() throws ConnectorException {
-		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y, DebsMain.SHIFT_X,
-				DebsMain.SHIFT_Y, 300);
-		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
+	public static Pushable initializeTask2(int runningMode, BufferedWriter resultFileWriter) {
+		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y,
+				DebsMain.SHIFT_X.divide(BigDecimal.valueOf(2)), DebsMain.SHIFT_Y.divide(BigDecimal.valueOf(2)), 600);
+		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper),profAreaToplist);
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
 					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null || tlog.getFare_amount() == null
@@ -99,8 +155,9 @@ public class BeepApp {
 
 		MedianComputingProcessor medProc = new MedianComputingProcessor(2, 2, profAreaToplist);
 		TaxiCountComputingProcessor countProc = new TaxiCountComputingProcessor(2, 1, profAreaToplist);
-		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, RESULT_FILE_PATH, profAreaToplist,
-				printFrequencyInMillisec);
+		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, profAreaToplist, runningMode, resultFileWriter,
+				BENCHMARK_FREQUENCY_IN_MS, fProc);
+		;
 
 		Connector.connect(fProc, 0, filterProc, 0);
 		Connector.connect(filterProc, 0, medProc, 0);
@@ -111,13 +168,15 @@ public class BeepApp {
 
 		Pushable fprocPushable = fProc.getPushableInput(0);
 
-		long startingTime = fProc.getCurrentParsedTime();
+		return fprocPushable;
+	}
 
-		for (long i = startingTime; i <= TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
-			fprocPushable.push(new Tick(i));
+	public static BufferedWriter initializeResultFileWriter(String fileName) throws IOException {
+		File resultFile = new File(fileName);
+		if (resultFile.exists()) {
+			resultFile.delete();
 		}
-
-		fProc.closeDataFileParser();
+		return new BufferedWriter(new FileWriter(resultFile));
 
 	}
 }

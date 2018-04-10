@@ -10,17 +10,19 @@ import ca.uqac.lif.cep.SingleProcessor;
 import onlab.event.TaxiLog;
 import onlab.event.Tick;
 import onlab.utility.DataFileParser;
+import onlab.utility.ToplistSetInterface;
 
 public class FileParserProcessor extends SingleProcessor {
 
 	private DataFileParser parser;
-	
-	
+	private Long counter = Long.valueOf(0);
 
+	private ToplistSetInterface toplist;
 	private List<TaxiLog> lastParsedTaxiLogs;
 
-	public FileParserProcessor(int in_arity, int out_arity, DataFileParser parser) {
+	public FileParserProcessor(int in_arity, int out_arity, DataFileParser parser, ToplistSetInterface toplist) {
 		super(in_arity, out_arity);
+		this.toplist = toplist;
 		this.parser = parser;
 		if (parser != null) {
 			lastParsedTaxiLogs = parser.parseNextLinesFromCSVGroupedByDropoffDate();
@@ -30,7 +32,7 @@ public class FileParserProcessor extends SingleProcessor {
 
 	@Override
 	protected boolean compute(Object[] input, Queue<Object[]> queue) throws ProcessorException {
-		 //System.out.println("FilePArserProcessor starts. This is " +
+		// System.out.println("FilePArserProcessor starts. This is " +
 		// Thread.currentThread() + " thread.");
 		if (parser == null) {
 			return false;
@@ -39,14 +41,16 @@ public class FileParserProcessor extends SingleProcessor {
 			Tick inputTick = (Tick) input[0];
 			long currentParsedTime = getCurrentParsedTime();
 
-			// if the next taxiLogs hasnt came yet. For real time, this part would be
+			// if the next taxiLogs hasnt came yet. For real time, this part
+			// would be
 			// slightly different. For now, we pass an empty list.
 			if (inputTick.getCurrentTime() < currentParsedTime) {
 				queue.add(new Object[] { Collections.emptyList(), inputTick });
 				return true;
 			}
 
-			// If the current parsed taxilogs dropoff datetime equals to the time of tick,
+			// If the current parsed taxilogs dropoff datetime equals to the
+			// time of tick,
 			// we can pass them into the tube
 			if (inputTick.getCurrentTime() == currentParsedTime) {
 				if (!parser.hasNextLine()) {
@@ -54,13 +58,16 @@ public class FileParserProcessor extends SingleProcessor {
 					parser.close();
 					return false;
 				}
+				counter += lastParsedTaxiLogs.size();
+				for (TaxiLog tlog : lastParsedTaxiLogs) {
+					tlog.setInserted(System.currentTimeMillis());
+				}
 				queue.add(new Object[] { lastParsedTaxiLogs, inputTick });
 				lastParsedTaxiLogs = parser.parseNextLinesFromCSVGroupedByDropoffDate();
 				return true;
 			}
 
-			// TODO what if currentTime is after dropoff times.
-			
+
 		}
 		return false;
 
@@ -68,12 +75,7 @@ public class FileParserProcessor extends SingleProcessor {
 
 	@Override
 	public Processor clone() {
-		try {
-			return new FileParserProcessor(this.getInputArity(), this.getOutputArity(),
-					(DataFileParser) parser.clone());
-		} catch (CloneNotSupportedException e) {
-			return null;
-		}
+		return null;
 	}
 
 	public void closeDataFileParser() {
@@ -88,6 +90,15 @@ public class FileParserProcessor extends SingleProcessor {
 		}
 		return DataFileParser.getCURRENT_TIME();
 	}
-	
+
+	@Override
+	public Processor duplicate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Long getCounter() {
+		return counter;
+	}
 
 }

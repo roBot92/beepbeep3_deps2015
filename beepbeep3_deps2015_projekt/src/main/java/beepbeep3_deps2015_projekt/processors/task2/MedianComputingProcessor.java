@@ -1,7 +1,6 @@
 package beepbeep3_deps2015_projekt.processors.task2;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -74,6 +73,7 @@ public class MedianComputingProcessor extends SingleProcessor {
 			BigDecimal profit = tlog.getFare_amount().add(tlog.getTip_amount());
 			medianListOfTlog.add(profit);
 			toplist.refreshAreaMedian(pickupCell, tlog.getDropoff_datetime(), medianListOfTlog.getMedian());
+			toplist.refreshInsertedForDelay(tlog.getInserted(), pickupCell);
 			cellPairs.add(new MedianElementEntry(pickupCell, profit, tlog.getDropoff_datetime().getTime()));
 		}
 	}
@@ -82,7 +82,7 @@ public class MedianComputingProcessor extends SingleProcessor {
 		long currentTime = tick.getCurrentTime();
 
 		
-		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime <= currentTime - lengthOfTimeWindow) {
+		while (cellPairs.peek() != null && cellPairs.peek().dropoffTime < currentTime - lengthOfTimeWindow) {
 			MedianElementEntry entry = cellPairs.poll();
 			CustomTreeMultiset medianListOfTlog = medianMap.get(entry.cell);
 			if (medianListOfTlog != null) {
@@ -95,6 +95,12 @@ public class MedianComputingProcessor extends SingleProcessor {
 
 	@Override
 	public Processor clone() {
+		return null;
+	}
+
+	@Override
+	public Processor duplicate() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

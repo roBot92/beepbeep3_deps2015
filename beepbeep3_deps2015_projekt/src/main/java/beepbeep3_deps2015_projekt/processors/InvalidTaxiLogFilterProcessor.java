@@ -46,4 +46,11 @@ public class InvalidTaxiLogFilterProcessor extends SingleProcessor {
 		return null;
 	}
 
+
+	@Override
+	public Processor duplicate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -76,6 +76,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, null);
 			}
 			toplist.increaseAreaTaxiCount(tlog.getDropoff_cell(), tlog.getDropoff_datetime());
+			toplist.refreshInsertedForDelay(tlog.getInserted(), tlog.getDropoff_cell());
 			TaxiMovedEntry newEntryOfTaxi = new TaxiMovedEntry(taxiLicense, cell, dropoffTime.getTime());
 			actualTaxiLocations.put(taxiLicense, newEntryOfTaxi);
 			taxiMovements.add(newEntryOfTaxi);
@@ -85,7 +86,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 
 	private void handleExpiringTaxiLogs(Tick tick) {
 		long currentTime = tick.getCurrentTime();
-		while (taxiMovements.peek() != null && taxiMovements.peek().time <= currentTime - lengthOfTimeWindow) {
+		while (taxiMovements.peek() != null && taxiMovements.peek().time < currentTime - lengthOfTimeWindow) {
 			TaxiMovedEntry entry = taxiMovements.poll();
 			//Ha a taxi aktuális hely entryje megegyezik a kifutó entryvel, akkor kell csak csökkenteni (mert akkor nem tartozik hozzá újabb) és ebben az esetben törölni is lehet
 			//Az aktuális lokációját
@@ -95,6 +96,12 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			}
 
 		}
+	}
+
+	@Override
+	public Processor duplicate() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
