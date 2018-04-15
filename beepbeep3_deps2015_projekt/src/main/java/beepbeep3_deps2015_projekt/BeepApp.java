@@ -29,7 +29,7 @@ public class BeepApp {
 	private static FrequentRoutesToplistSet freqRouteToplist = new FrequentRoutesToplistSet();
 	private static ProfitableAreaToplistSet profAreaToplist = new ProfitableAreaToplistSet();
 
-	public static final long TEST_INTERVAL_IN_IN_MS = 1 * 60 * 60 * 1000;
+	public static final long TEST_INTERVAL_IN_IN_MS = 24 * 60 * 60 * 1000;
 	public static final long BENCHMARK_FREQUENCY_IN_MS = 1000 * 60;
 
 	public static final int TASK_NUMBER_ONE = 1;
@@ -119,7 +119,7 @@ public class BeepApp {
 		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y, DebsMain.SHIFT_X,
 				DebsMain.SHIFT_Y, 300);
 
-		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper),freqRouteToplist);
+		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
 					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null;
@@ -145,7 +145,7 @@ public class BeepApp {
 	public static Pushable initializeTask2(int runningMode, BufferedWriter resultFileWriter) {
 		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y,
 				DebsMain.SHIFT_X.divide(BigDecimal.valueOf(2)), DebsMain.SHIFT_Y.divide(BigDecimal.valueOf(2)), 600);
-		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper),profAreaToplist);
+		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null
 					|| tlog.getPickup_cell() == null || tlog.getDropoff_cell() == null || tlog.getFare_amount() == null

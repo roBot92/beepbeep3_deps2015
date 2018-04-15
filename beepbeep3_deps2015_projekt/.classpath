@@ -22,11 +22,11 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/beepbeep-3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/apache.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/fol.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/fsm.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/ltl.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Boti/AppData/tuples.jar" sourcepath="C:/Users/Boti/Downloads/beepbeep3palettes/beepbeep-3-palettes-master"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/beepbeep-3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/fol.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/fsm.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/ltl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/tuples.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/apache.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

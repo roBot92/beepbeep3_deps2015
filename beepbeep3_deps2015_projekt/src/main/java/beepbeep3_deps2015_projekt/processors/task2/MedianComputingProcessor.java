@@ -100,7 +100,6 @@ public class MedianComputingProcessor extends SingleProcessor {
 
 	@Override
 	public Processor duplicate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

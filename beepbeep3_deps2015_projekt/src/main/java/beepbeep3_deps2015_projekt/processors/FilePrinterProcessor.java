@@ -41,11 +41,12 @@ public class FilePrinterProcessor extends SingleProcessor {
 			Tick tick = (Tick) input[0];
 			if(startingTime == -1){
 				startingTime = tick.getCurrentTime();
+				DebsMain.restartCurrentTime();
 			}
 			try {
 				previousToplistWithoutDelay = DebsMain.handlePrintActions(toplist, runningMode,
 						previousToplistWithoutDelay, bufferedFileWriter, tick.getCurrentTime(), fParserProc.getCounter(), startingTime,
-						benchmarkFrequency, previousTime, runtime);
+						benchmarkFrequency, runtime);
 			} catch (IOException e) {
 				e.printStackTrace();
 				throw new ProcessorException(e);
@@ -62,7 +63,6 @@ public class FilePrinterProcessor extends SingleProcessor {
 
 	@Override
 	public Processor duplicate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

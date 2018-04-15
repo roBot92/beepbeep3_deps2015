@@ -17,12 +17,10 @@ public class FileParserProcessor extends SingleProcessor {
 	private DataFileParser parser;
 	private Long counter = Long.valueOf(0);
 
-	private ToplistSetInterface toplist;
 	private List<TaxiLog> lastParsedTaxiLogs;
 
-	public FileParserProcessor(int in_arity, int out_arity, DataFileParser parser, ToplistSetInterface toplist) {
+	public FileParserProcessor(int in_arity, int out_arity, DataFileParser parser) {
 		super(in_arity, out_arity);
-		this.toplist = toplist;
 		this.parser = parser;
 		if (parser != null) {
 			lastParsedTaxiLogs = parser.parseNextLinesFromCSVGroupedByDropoffDate();
@@ -93,7 +91,6 @@ public class FileParserProcessor extends SingleProcessor {
 
 	@Override
 	public Processor duplicate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

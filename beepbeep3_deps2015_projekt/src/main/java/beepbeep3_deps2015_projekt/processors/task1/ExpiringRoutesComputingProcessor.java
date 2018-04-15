@@ -63,20 +63,17 @@ public class ExpiringRoutesComputingProcessor extends SingleProcessor {
 
 		}
 
-		System.out.println(toplist);
 		output.add(new Object[] {input[1]});
 		return true;
 	}
 
 	@Override
 	public Processor clone() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Processor duplicate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
