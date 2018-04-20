@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt.processors.task2;
+package hu.bme.mit.beepbeep3.processors.task2;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import java.util.Queue;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
-import onlab.event.TaxiLog;
-import onlab.event.Tick;
-import onlab.positioning.Cell;
-import onlab.utility.ProfitableAreaToplistSet;
+import hu.bme.mit.entities.TaxiLog;
+import hu.bme.mit.entities.Tick;
+import hu.bme.mit.positioning.Cell;
+import hu.bme.mit.toplist.ProfitableAreaToplistSet;
 
 public class TaxiCountComputingProcessor extends SingleProcessor {
 

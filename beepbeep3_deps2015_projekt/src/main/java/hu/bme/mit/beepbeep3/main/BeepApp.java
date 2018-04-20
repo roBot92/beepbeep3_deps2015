@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt;
+package hu.bme.mit.beepbeep3.main;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -6,30 +6,31 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Date;
 
-import beepbeep3_deps2015_projekt.processors.FileParserProcessor;
-import beepbeep3_deps2015_projekt.processors.FilePrinterProcessor;
-import beepbeep3_deps2015_projekt.processors.InvalidTaxiLogFilterProcessor;
-import beepbeep3_deps2015_projekt.processors.task1.NewRouteComputingProcessor;
-import beepbeep3_deps2015_projekt.processors.task2.MedianComputingProcessor;
-import beepbeep3_deps2015_projekt.processors.task2.TaxiCountComputingProcessor;
-import beepbeep3_deps2015_projekt.processors.task1.ExpiringRoutesComputingProcessor;
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Connector.ConnectorException;
+import hu.bme.mit.beepbeep3.processors.FileParserProcessor;
+import hu.bme.mit.beepbeep3.processors.FilePrinterProcessor;
+import hu.bme.mit.beepbeep3.processors.InvalidTaxiLogFilterProcessor;
+import hu.bme.mit.beepbeep3.processors.task1.ExpiringRoutesComputingProcessor;
+import hu.bme.mit.beepbeep3.processors.task1.NewRouteComputingProcessor;
+import hu.bme.mit.beepbeep3.processors.task2.MedianComputingProcessor;
+import hu.bme.mit.beepbeep3.processors.task2.TaxiCountComputingProcessor;
+import hu.bme.mit.entities.Tick;
+import hu.bme.mit.positioning.CellHelper;
+import hu.bme.mit.toplist.FrequentRoutesToplistSet;
+import hu.bme.mit.toplist.ProfitableAreaToplistSet;
+import hu.bme.mit.utility.DataFileParser;
+import hu.bme.mit.utility.ExecutionSetup;
 import ca.uqac.lif.cep.Pushable;
-import onlab.event.Tick;
-import onlab.main.DebsMain;
-import onlab.positioning.CellHelper;
-import onlab.utility.DataFileParser;
-import onlab.utility.FrequentRoutesToplistSet;
-import onlab.utility.ProfitableAreaToplistSet;
 
 public class BeepApp {
 
 	private static FrequentRoutesToplistSet freqRouteToplist = new FrequentRoutesToplistSet();
 	private static ProfitableAreaToplistSet profAreaToplist = new ProfitableAreaToplistSet();
 
-	public static final long TEST_INTERVAL_IN_IN_MS = 24 * 60 * 60 * 1000;
+	public static final long TEST_INTERVAL_IN_IN_MS = 31 * 24 * 60 * 60 * 1000l;
 	public static final long BENCHMARK_FREQUENCY_IN_MS = 1000 * 60;
 
 	public static final int TASK_NUMBER_ONE = 1;
@@ -38,7 +39,7 @@ public class BeepApp {
 	public static void main(String[] args) {
 
 		try {
-			runTask1();
+		//	runTask1();
 			runTask2();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -50,7 +51,7 @@ public class BeepApp {
 	public static DataFileParser initializeDataFileParser(CellHelper chelper) {
 
 		try {
-			return new DataFileParser(DebsMain.DATA_FILE_URL, DebsMain.DELIMITER, DebsMain.columncount, chelper);
+			return new DataFileParser(ExecutionSetup.DATA_FILE_URL, ExecutionSetup.DELIMITER, ExecutionSetup.columncount, chelper);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return null;
@@ -62,6 +63,7 @@ public class BeepApp {
 			throws ConnectorException, IOException {
 
 		BufferedWriter resultFileWriter = null;
+		FileParserProcessor fPProc = null;
 		try {
 			resultFileWriter = initializeResultFileWriter(resultFileName);
 			Pushable pushable = null;
@@ -70,13 +72,17 @@ public class BeepApp {
 			} else if (taskNumber == TASK_NUMBER_TWO) {
 				pushable = initializeTask2(runningMode, resultFileWriter);
 			}
-			FileParserProcessor fPProc = (FileParserProcessor) pushable.getProcessor();
+			fPProc = (FileParserProcessor) pushable.getProcessor();
 			long startingTime = fPProc.getCurrentParsedTime();
 
 			for (long i = startingTime; i <= TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
 				pushable.push(new Tick(i));
 			}
 			fPProc.closeDataFileParser();
+			if(runningMode == ExecutionSetup.TIME_MEASURING_MODE){
+				resultFileWriter.newLine();
+				resultFileWriter.write("Ending time: " + DataFileParser.SIMPLE_DATE_FORMAT.format(new Date(System.currentTimeMillis())));
+			}
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -85,28 +91,31 @@ public class BeepApp {
 			if (resultFileWriter != null) {
 				resultFileWriter.close();
 			}
+			if(fPProc != null){
+				fPProc.closeDataFileParser();
+			}
 		}
 
 	}
 
 	public static void runTask1() throws ConnectorException, IOException {
 
-		runTask(DebsMain.task1ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_ONE);
+	//	runTask(DebsMain.task1ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_ONE);
+	//	freqRouteToplist.clear();
+		runTask(ExecutionSetup.task1TimeMeasuringResultFileName,ExecutionSetup.TIME_MEASURING_MODE, TASK_NUMBER_ONE);
 		freqRouteToplist.clear();
-		runTask(DebsMain.task1TimeMeasuringResultFileName,DebsMain.TIME_MEASURING_MODE, TASK_NUMBER_ONE);
-		freqRouteToplist.clear();
-		runTask(DebsMain.task1MemoryMeasuringResultFileName,DebsMain.MEMORY_MEASURING_MODE, TASK_NUMBER_ONE);
+		runTask(ExecutionSetup.task1MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_ONE);
 	
 	}
 	
 	public static void runTask2() throws ConnectorException, IOException {
 
 		
-		runTask(DebsMain.task2ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
+		runTask(ExecutionSetup.task2ResultToCompareFileName,ExecutionSetup.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
 		profAreaToplist.clear();
-		runTask(DebsMain.task2TimeMeasuringResultFileName,DebsMain.TIME_MEASURING_MODE, TASK_NUMBER_TWO);
+		runTask(ExecutionSetup.task2TimeMeasuringResultFileName,ExecutionSetup.TIME_MEASURING_MODE, TASK_NUMBER_TWO);
 		profAreaToplist.clear();
-		runTask(DebsMain.task2MemoryMeasuringResultFileName,DebsMain.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
+		runTask(ExecutionSetup.task2MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
 	
 	}
 	
@@ -116,8 +125,8 @@ public class BeepApp {
 
 
 	public static Pushable initializeTask1(int runningMode, BufferedWriter resultFileWriter) {
-		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y, DebsMain.SHIFT_X,
-				DebsMain.SHIFT_Y, 300);
+		CellHelper chelper = new CellHelper(ExecutionSetup.FIRST_CELL_X, ExecutionSetup.FIRST_CELL_Y, ExecutionSetup.SHIFT_X,
+				ExecutionSetup.SHIFT_Y, 300);
 
 		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
@@ -143,8 +152,8 @@ public class BeepApp {
 	}
 
 	public static Pushable initializeTask2(int runningMode, BufferedWriter resultFileWriter) {
-		CellHelper chelper = new CellHelper(DebsMain.FIRST_CELL_X, DebsMain.FIRST_CELL_Y,
-				DebsMain.SHIFT_X.divide(BigDecimal.valueOf(2)), DebsMain.SHIFT_Y.divide(BigDecimal.valueOf(2)), 600);
+		CellHelper chelper = new CellHelper(ExecutionSetup.FIRST_CELL_X, ExecutionSetup.FIRST_CELL_Y,
+				ExecutionSetup.SHIFT_X.divide(BigDecimal.valueOf(2)), ExecutionSetup.SHIFT_Y.divide(BigDecimal.valueOf(2)), 600);
 		FileParserProcessor fProc = new FileParserProcessor(1, 2, initializeDataFileParser(chelper));
 		InvalidTaxiLogFilterProcessor filterProc = new InvalidTaxiLogFilterProcessor(1, 1, tlog -> {
 			return tlog.getPickup_datetime() == null || tlog.getDropoff_datetime() == null

@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt;
+package hu.bme.mit.beepbeep3;
 
 import static org.junit.Assert.*;
 
@@ -14,17 +14,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import beepbeep3_deps2015_projekt.processors.FilePrinterProcessor;
-import beepbeep3_deps2015_projekt.processors.InvalidTaxiLogFilterProcessor;
-import beepbeep3_deps2015_projekt.processors.task2.MedianComputingProcessor;
-import beepbeep3_deps2015_projekt.processors.task2.TaxiCountComputingProcessor;
-import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pushable;
-import onlab.event.AreaWithProfit;
-import onlab.event.TaxiLog;
-import onlab.event.Tick;
-import onlab.positioning.Cell;
-import onlab.utility.ProfitableAreaToplistSet;
+import hu.bme.mit.beepbeep3.processors.InvalidTaxiLogFilterProcessor;
+import hu.bme.mit.beepbeep3.processors.task2.MedianComputingProcessor;
+import hu.bme.mit.beepbeep3.processors.task2.TaxiCountComputingProcessor;
+import hu.bme.mit.entities.AreaWithProfit;
+import hu.bme.mit.entities.TaxiLog;
+import hu.bme.mit.entities.Tick;
+import hu.bme.mit.positioning.Cell;
+import hu.bme.mit.toplist.ProfitableAreaToplistSet;
 
 public class BeepBeepTask2Test {
 
@@ -53,7 +51,7 @@ public class BeepBeepTask2Test {
 
 		MedianComputingProcessor medProc = new MedianComputingProcessor(2, 2, toplist);
 		TaxiCountComputingProcessor countProc = new TaxiCountComputingProcessor(2, 1, toplist);
-		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, System.out, toplist, 60 * 1000);
+/*		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, System.out, toplist, 60 * 1000);
 
 		Connector.connect(filterProc, 0, medProc, 0);
 		Connector.connect(medProc, 0, countProc, 0);
@@ -64,7 +62,7 @@ public class BeepBeepTask2Test {
 		filterProcPushable = filterProc.getPushableInput(0);
 
 		clock = Calendar.getInstance();
-		clock.setTimeInMillis(0);
+		clock.setTimeInMillis(0);*/
 	}
 
 	@Test

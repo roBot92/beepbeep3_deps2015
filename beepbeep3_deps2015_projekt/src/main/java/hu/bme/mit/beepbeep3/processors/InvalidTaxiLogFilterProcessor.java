@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt.processors;
+package hu.bme.mit.beepbeep3.processors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,7 +9,7 @@ import java.util.function.Predicate;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
-import onlab.event.TaxiLog;
+import hu.bme.mit.entities.TaxiLog;
 
 public class InvalidTaxiLogFilterProcessor extends SingleProcessor {
 

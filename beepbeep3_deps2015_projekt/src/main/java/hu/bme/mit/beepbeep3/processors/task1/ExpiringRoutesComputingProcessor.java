@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt.processors.task1;
+package hu.bme.mit.beepbeep3.processors.task1;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -7,11 +7,10 @@ import java.util.Queue;
 import ca.uqac.lif.cep.Processor;
 import ca.uqac.lif.cep.ProcessorException;
 import ca.uqac.lif.cep.SingleProcessor;
-import onlab.event.TaxiLog;
-import onlab.event.Tick;
-import onlab.positioning.Cell;
-import onlab.utility.FrequentRoutesToplistSet;
-
+import hu.bme.mit.entities.TaxiLog;
+import hu.bme.mit.entities.Tick;
+import hu.bme.mit.positioning.Cell;
+import hu.bme.mit.toplist.FrequentRoutesToplistSet;
 public class ExpiringRoutesComputingProcessor extends SingleProcessor {
 
 	Queue<CellPairEntry> cellPairs = new LinkedList<CellPairEntry>();

@@ -1,4 +1,4 @@
-package beepbeep3_deps2015_projekt;
+package hu.bme.mit.beepbeep3;
 
 import static org.junit.Assert.*;
 
@@ -13,17 +13,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import beepbeep3_deps2015_projekt.processors.FilePrinterProcessor;
-import beepbeep3_deps2015_projekt.processors.InvalidTaxiLogFilterProcessor;
-import beepbeep3_deps2015_projekt.processors.task1.ExpiringRoutesComputingProcessor;
-import beepbeep3_deps2015_projekt.processors.task1.NewRouteComputingProcessor;
-import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pushable;
-import onlab.positioning.Cell;
-import onlab.event.Route;
-import onlab.event.TaxiLog;
-import onlab.event.Tick;
-import onlab.utility.FrequentRoutesToplistSet;
+import hu.bme.mit.beepbeep3.processors.InvalidTaxiLogFilterProcessor;
+import hu.bme.mit.beepbeep3.processors.task1.ExpiringRoutesComputingProcessor;
+import hu.bme.mit.beepbeep3.processors.task1.NewRouteComputingProcessor;
+import hu.bme.mit.entities.Route;
+import hu.bme.mit.entities.TaxiLog;
+import hu.bme.mit.entities.Tick;
+import hu.bme.mit.positioning.Cell;
+import hu.bme.mit.toplist.FrequentRoutesToplistSet;
 
 public class BeepBeepTask1Test {
 
@@ -80,7 +78,7 @@ public class BeepBeepTask1Test {
 		NewRouteComputingProcessor nrProc = new NewRouteComputingProcessor(1, 1, toplist);
 		ExpiringRoutesComputingProcessor exProc = new ExpiringRoutesComputingProcessor(2, 1, toplist);
 
-		FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, System.out, toplist, 60 * 1000);
+	/*	FilePrinterProcessor fPrintProc = new FilePrinterProcessor(1, 0, System.out, toplist, 60 * 1000);
 
 		Connector.connect(filterProc, 0, nrProc, 0);
 		Connector.connect(nrProc, 0, exProc, 0);
@@ -90,7 +88,7 @@ public class BeepBeepTask1Test {
 		filterProcPushable = filterProc.getPushableInput(0);
 
 		clock = Calendar.getInstance();
-		clock.setTimeInMillis(0);
+		clock.setTimeInMillis(0);*/
 
 	}
 
