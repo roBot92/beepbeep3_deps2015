@@ -39,7 +39,7 @@ public class BeepApp {
 	public static void main(String[] args) {
 
 		try {
-		//	runTask1();
+			runTask1();
 			runTask2();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -75,6 +75,12 @@ public class BeepApp {
 			fPProc = (FileParserProcessor) pushable.getProcessor();
 			long startingTime = fPProc.getCurrentParsedTime();
 
+			System.gc();
+			try {
+				Thread.sleep(10000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			for (long i = startingTime; i <= TEST_INTERVAL_IN_IN_MS + startingTime; i += 1000) {
 				pushable.push(new Tick(i));
 			}
@@ -100,8 +106,8 @@ public class BeepApp {
 
 	public static void runTask1() throws ConnectorException, IOException {
 
-	//	runTask(DebsMain.task1ResultToCompareFileName,DebsMain.OUTPUT_COOMPARING_MODE, TASK_NUMBER_ONE);
-	//	freqRouteToplist.clear();
+		runTask(ExecutionSetup.task1ResultToCompareFileName,ExecutionSetup.OUTPUT_COOMPARING_MODE, TASK_NUMBER_ONE);
+		freqRouteToplist.clear();
 		runTask(ExecutionSetup.task1TimeMeasuringResultFileName,ExecutionSetup.TIME_MEASURING_MODE, TASK_NUMBER_ONE);
 		freqRouteToplist.clear();
 		runTask(ExecutionSetup.task1MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_ONE);
@@ -111,11 +117,13 @@ public class BeepApp {
 	public static void runTask2() throws ConnectorException, IOException {
 
 		
+		
+		runTask(ExecutionSetup.task2MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
+		profAreaToplist.clear();
 		runTask(ExecutionSetup.task2ResultToCompareFileName,ExecutionSetup.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
 		profAreaToplist.clear();
 		runTask(ExecutionSetup.task2TimeMeasuringResultFileName,ExecutionSetup.TIME_MEASURING_MODE, TASK_NUMBER_TWO);
-		profAreaToplist.clear();
-		runTask(ExecutionSetup.task2MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
+		
 	
 	}
 	
@@ -147,7 +155,6 @@ public class BeepApp {
 		Connector.connect(nrProc, 0, exProc, 0);
 		Connector.connect(fProc, 1, exProc, 1);
 		Connector.connect(exProc, 0, fPrintProc, 0);
-
 		return fProc.getPushableInput(0);
 	}
 

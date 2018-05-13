@@ -17,17 +17,17 @@ import hu.bme.mit.toplist.ProfitableAreaToplistSet;
 public class TaxiCountComputingProcessor extends SingleProcessor {
 
 	private ProfitableAreaToplistSet toplist;
-	private Map<String, TaxiMovedEntry> actualTaxiLocations = new HashMap<String, TaxiMovedEntry>();
-	private Queue<TaxiMovedEntry> taxiMovements = new LinkedList<TaxiMovedEntry>();
+	private Map<String, TaxiLocationEntry> actualTaxiLocations = new HashMap<String, TaxiLocationEntry>();
+	private Queue<TaxiLocationEntry> taxiLocationQueue = new LinkedList<TaxiLocationEntry>();
 
 	private static long lengthOfTimeWindow = 30 * 60 * 1000;
 
-	private class TaxiMovedEntry {
+	private class TaxiLocationEntry {
 		private String license;
 		private Cell cell;
 		private long time;
 
-		public TaxiMovedEntry(String license, Cell cell, long time) {
+		public TaxiLocationEntry(String license, Cell cell, long time) {
 			this.license = license;
 			this.cell = cell;
 			this.time = time;
@@ -71,23 +71,23 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			String taxiLicense = tlog.getHack_license();
 			Cell cell = tlog.getDropoff_cell();
 			Date dropoffTime = tlog.getDropoff_datetime();
-			TaxiMovedEntry previousEntryOfTaxi = actualTaxiLocations.get(taxiLicense);
+			TaxiLocationEntry previousEntryOfTaxi = actualTaxiLocations.get(taxiLicense);
 			if (previousEntryOfTaxi != null) {
 				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, null);
 			}
 			toplist.increaseAreaTaxiCount(tlog.getDropoff_cell(), tlog.getDropoff_datetime());
 			toplist.refreshInsertedForDelay(tlog.getInserted(), tlog.getDropoff_cell());
-			TaxiMovedEntry newEntryOfTaxi = new TaxiMovedEntry(taxiLicense, cell, dropoffTime.getTime());
+			TaxiLocationEntry newEntryOfTaxi = new TaxiLocationEntry(taxiLicense, cell, dropoffTime.getTime());
 			actualTaxiLocations.put(taxiLicense, newEntryOfTaxi);
-			taxiMovements.add(newEntryOfTaxi);
+			taxiLocationQueue.add(newEntryOfTaxi);
 
 		}
 	}
 
 	private void handleExpiringTaxiLogs(Tick tick) {
 		long currentTime = tick.getCurrentTime();
-		while (taxiMovements.peek() != null && taxiMovements.peek().time < currentTime - lengthOfTimeWindow) {
-			TaxiMovedEntry entry = taxiMovements.poll();
+		while (taxiLocationQueue.peek() != null && taxiLocationQueue.peek().time < currentTime - lengthOfTimeWindow) {
+			TaxiLocationEntry entry = taxiLocationQueue.poll();
 			//Ha a taxi aktuális hely entryje megegyezik a kifutó entryvel, akkor kell csak csökkenteni (mert akkor nem tartozik hozzá újabb) és ebben az esetben törölni is lehet
 			//Az aktuális lokációját
 			if (entry == actualTaxiLocations.get(entry.license)) {

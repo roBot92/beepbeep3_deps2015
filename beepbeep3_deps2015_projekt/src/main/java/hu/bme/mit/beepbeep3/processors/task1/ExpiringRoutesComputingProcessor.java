@@ -13,9 +13,9 @@ import hu.bme.mit.positioning.Cell;
 import hu.bme.mit.toplist.FrequentRoutesToplistSet;
 public class ExpiringRoutesComputingProcessor extends SingleProcessor {
 
-	Queue<CellPairEntry> cellPairs = new LinkedList<CellPairEntry>();
+	private Queue<CellPairEntry> cellPairs = new LinkedList<CellPairEntry>();
 
-	FrequentRoutesToplistSet toplist = new FrequentRoutesToplistSet();
+	private FrequentRoutesToplistSet toplist = new FrequentRoutesToplistSet();
 	// milliseconds, 30 min
 	private static long lengthOfTimeWindow = 30 * 60 * 1000;
 
