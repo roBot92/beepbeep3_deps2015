@@ -118,10 +118,10 @@ public class BeepApp {
 
 		
 		
-		runTask(ExecutionSetup.task2MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
-		profAreaToplist.clear();
-		runTask(ExecutionSetup.task2ResultToCompareFileName,ExecutionSetup.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
-		profAreaToplist.clear();
+	//	runTask(ExecutionSetup.task2MemoryMeasuringResultFileName,ExecutionSetup.MEMORY_MEASURING_MODE, TASK_NUMBER_TWO);
+	//	profAreaToplist.clear();
+	//	runTask(ExecutionSetup.task2ResultToCompareFileName,ExecutionSetup.OUTPUT_COOMPARING_MODE, TASK_NUMBER_TWO);
+	//	profAreaToplist.clear();
 		runTask(ExecutionSetup.task2TimeMeasuringResultFileName,ExecutionSetup.TIME_MEASURING_MODE, TASK_NUMBER_TWO);
 		
 	

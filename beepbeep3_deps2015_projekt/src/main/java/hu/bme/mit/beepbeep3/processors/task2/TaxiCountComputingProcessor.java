@@ -71,14 +71,13 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 			String taxiLicense = tlog.getHack_license();
 			Cell cell = tlog.getDropoff_cell();
 			Date dropoffTime = tlog.getDropoff_datetime();
-			TaxiLocationEntry previousEntryOfTaxi = actualTaxiLocations.get(taxiLicense);
+			TaxiLocationEntry newEntryOfTaxi = new TaxiLocationEntry(taxiLicense, cell, dropoffTime.getTime());
+			TaxiLocationEntry previousEntryOfTaxi = actualTaxiLocations.put(taxiLicense, newEntryOfTaxi);;
 			if (previousEntryOfTaxi != null) {
 				toplist.decreaseAreaTaxiCount(previousEntryOfTaxi.cell, null);
 			}
 			toplist.increaseAreaTaxiCount(tlog.getDropoff_cell(), tlog.getDropoff_datetime());
 			toplist.refreshInsertedForDelay(tlog.getInserted(), tlog.getDropoff_cell());
-			TaxiLocationEntry newEntryOfTaxi = new TaxiLocationEntry(taxiLicense, cell, dropoffTime.getTime());
-			actualTaxiLocations.put(taxiLicense, newEntryOfTaxi);
 			taxiLocationQueue.add(newEntryOfTaxi);
 
 		}

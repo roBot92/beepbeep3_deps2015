@@ -23,10 +23,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/beepbeep-3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/fol.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/fsm.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/ltl.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/tuples.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Rózsavölgyi Botond/java-libs/apache.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drools_debs2015_projekt"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
