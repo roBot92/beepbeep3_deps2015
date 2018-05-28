@@ -1,28 +1,17 @@
 package hu.bme.mit.beepbeep3;
 
-import static org.junit.Assert.*;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-//import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Pushable;
 import hu.bme.mit.beepbeep3.processors.InvalidTaxiLogFilterProcessor;
 import hu.bme.mit.beepbeep3.processors.task2.MedianComputingProcessor;
 import hu.bme.mit.beepbeep3.processors.task2.TaxiCountComputingProcessor;
-import hu.bme.mit.entities.AreaWithProfit;
 import hu.bme.mit.entities.TaxiLog;
 import hu.bme.mit.entities.Tick;
-import hu.bme.mit.positioning.Cell;
 import hu.bme.mit.test.AbstractTask2Test;
 import hu.bme.mit.toplist.ProfitableAreaToplistSet;
 

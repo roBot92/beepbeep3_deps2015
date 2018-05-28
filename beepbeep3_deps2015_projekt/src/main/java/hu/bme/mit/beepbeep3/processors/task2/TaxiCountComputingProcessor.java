@@ -99,7 +99,7 @@ public class TaxiCountComputingProcessor extends SingleProcessor {
 
 	@Override
 	public Processor duplicate() {
-		return null;
+		return null; 
 	}
 
 	
